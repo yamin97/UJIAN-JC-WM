@@ -1,0 +1,295 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <style>
+            table, tr, td{
+                border: 1px solid black;
+                border-collapse: collapse;
+                padding: 10px;
+            }
+            div{
+                border: 1px solid black;
+                width: 250px;
+                padding: 10px;
+            }
+        </style>
+</head>
+<body bgcolor="gray">
+    <center>
+    USERNAME : <input type="text" id="login" placeholder="Masukan Username"> 
+    <br><br>
+    PASSWORD : <input type="password" id="password" placeholder="Masukan password"> 
+    <br>
+    <input type="button" value="login" onclick="login()">
+    <input type="button" value="logout" onclick="logout()">
+
+        <div id = "admin">
+
+        </div>
+        <table>
+            <thead id="tadmin">
+
+            </thead>
+            <tbody id="menu">
+
+            </tbody>
+        </table>
+        <br>
+        
+        <div id="user">
+
+        </div>
+        <table>
+            <thead id="user">
+
+            </thead>
+            <tbody id="hasil">
+
+            </tbody>
+        </table>
+        <br>
+
+    </center>
+    <script>
+        class cetakanuser{
+        constructor(username,password){
+            this.username = username,
+            this.password = password,
+            this.role = 'user'
+        }
+    }
+        class Product{
+            constructor(no, kegiatan, hari, gambar){
+                this.no = no,
+                this.kegiatan = kegiatan,
+                this.hari = hari
+                this.gambar = gambar
+            }
+        }
+        var user = [
+        {
+            username : 'yamin',
+            password : 12345,
+            role : 'user'
+        },
+        {
+            username : 'admin',
+            password : 'admin',
+            role : 'admin'
+        }
+    ]
+    var menu = [
+         new Product(1, 'LARI', 'Senin', 'lari.png' ),
+         new Product(2, 'ESTAFET', 'Selasa', 'https://cdn2.tstatic.net/wartakota/foto/bank/images/20180830lalu-muhammad-zohri-cs-boyong-medali-perak1_20180830_225650.jpg'),
+    ]
+    var cart = []
+    function cek(username,password){
+        for(var a=0 ; a<user.length; a++){
+            if(username = user[a].username && password == user[a].password){
+                return user[a].role
+            }
+        }
+        return false
+    }
+    function login(){
+        var username = document.getElementById("login").value 
+        var password = document.getElementById("password").value 
+        console.log(username)
+        console.log(password)
+        if(cek(username,password) == 'admin'){
+            alert('anda sebagai admin')
+            printMenu(true)
+        }else if(cek(username,password) == 'user'){
+            alert('anda sebagai user')
+            printUser(true)
+        }else{
+            alert('silahkan daftar dulu !')
+        }
+    }
+    function logout(){
+        document.getElementById("menu").innerHTML = ""
+        document.getElementById("admin").innerHTML = ""
+        document.getElementById("tadmin").innerHTML = ""
+        document.getElementById("tuser").innerHTML = ""
+    }
+    function printMenu(proteksi){
+        if(proteksi==true){
+            var outputjuduladmin = `<h3>MADDING</h3>`
+            var outputadmin = 
+            `<tr>
+                <td>No</td>
+                <td>Kegiatan</td>
+                <td>Hari</td>
+                <td>Gambar</td>
+                <td>Action</td>
+            </tr>`
+            varoutputuser = 
+            `<tr>
+                <td>No</td>
+                <td>Kegiatan</td>
+                <td>Hari</td>
+                <td>Gambar</td>
+                <td>Action</td>
+            </tr>`
+            var output = ''
+            for(var a=0; a<menu.length; a++){
+                output +=
+                `<tr>
+                    <td id ="no${a}">${menu[a].no}</td>
+                    <td id ="kegiatan${a}">${menu[a].kegiatan}</td>
+                    <td id ="hari${a}">${menu[a].hari}</td>
+                    <td id ="gambar${a}"><img src ="${menu[a].gambar}" width="100px"></td>
+                    <td id ="klik${a}">
+                            <input type="button" value="delete" onclick="deletemenu(${a}")><br>
+                            <input type="button" value="edit" onclick="editmenu(${a})">
+                    </td>
+                </tr>`  
+            }
+                output += 
+                `<tr>
+                    <td> <input type = "text" id = "no"></td>
+                    <td> <input type = "text" id = "kegiatan"></td>
+                    <td>
+                        <select id="option">
+                        <option value="jumat">jumat</option>    
+                        <option value="kamis">kamis</option>
+                        <option value="rabu">rabu</option>
+                        <option value="selasa">selasa</option>
+                        <option value="senin" selected>senin</option>
+                        </select>
+                    </td>
+                    <td> <input type = "text" id = "namagambar"></td>
+                    <td> <input type = "button" value = "add to product" onclick = "addNewProduct()"></td>
+                </tr>`
+            document.getElementById("menu").innerHTML = output
+            document.getElementById("admin").innerHTML = outputjuduladmin
+            document.getElementById("tadmin").innerHTML = outputadmin
+            document.getElementById("tuser").innerHTML = outputuser
+        }else if(proteksi == false){
+            document.getElementById("menu").innerHTML = ""
+            document.getElementById("admin").innerHTML = ""
+            document.getElementById("tadmin").innerHTML = ""
+            document.getElementById("tuser").innerHTML = ""
+        }
+    }
+    function printUser(proteksi2){
+        if(proteksi2==true){
+            var outputjuduluser = `<h3>MADDING</h3>`
+            var outputcart = 
+            `<tr>
+                <td>No</td>
+                <td>Kegiatan</td>
+                <td>Hari</td>
+                <td>Gambar</td>
+                <td>Action</td>
+            </tr>`
+            var outputusercart = 
+            `<tr>
+                <td>No</td>
+                <td>Kegiatan</td>
+                <td>Hari</td>
+                <td>Gambar</td>
+                <td>Action</td>
+            </tr>`
+            var output = ''
+            for(var a=0; a<menu.length; a++){
+                output +=
+                `<tr>
+                    <td id ="no${a}">${menu[a].no}</td>
+                    <td id ="kegiatan${a}">${menu[a].kegiatan}</td>
+                    <td id ="hari${a}">${menu[a].hari}</td>
+                    <td id ="gambar${a}"><img src ="${menu[a].gambar}" width="100px"></td>
+                    <td></td>
+                </tr>`
+            }
+            document.getElementById("menu").innerHTML = output
+            document.getElementById("admin").innerHTML = outputjuduluser
+            document.getElementById("tadmin").innerHTML = outputcart
+            document.getElementById("tuser").innerHTML = outputusercart
+            }else if(proteksi2 == false){
+            document.getElementById("menu").innerHTML = ""
+            document.getElementById("admin").innerHTML = ""
+            document.getElementById("tadmin").innerHTML = ""
+            document.getElementById("tuser").innerHTML = ""
+            }
+    }
+    function addNewProduct(){
+        var nobaru = document.getElementById('nobaru').value
+        var kegiatanbaru = document.getElementById('kegiatanbaru').value
+        var haribaru = document.getElementById('haribaru').value
+        var urlbaru = document.getElementById('urlbaru').value
+        if(nobaru && kegiatanbaru && haribaru && urlbaru){
+            console.log(addproduk)
+            menu.push(addproduk)
+            printMenu(true)
+            document.getElementById("nobaru").value = ""
+            document.getElementById("kegiatanbaru").value = ""
+            document.getElementById("haribaru").value = ""
+            document.getElementById("urlbaru").value = ""
+        }else{
+            alert('isi dulu dengan benar')
+        }
+    }
+    function deletemenu(index){
+        menu.splice(index, 1)
+        printMenu()
+    }
+    function editmenu(index){
+        var output = ''
+        console.log(index)
+        for(var i = 0 ; i<1; i++){
+            output+= `
+            <tr>
+                <td>${index+1}</td>
+                <td><input type="text" id="editno"></td>
+                <td><input type="text" id="editkegiatan"></td>
+                <td><input type="text" id="edithari"></td>
+                <td><input type="text" id="editurl"></td>
+                <td><input type="button" value="cancel" onclick="printMenu(${index})">
+                <input type="button" value="confirm" onclick="confirmedit(${index})">
+            </tr>
+            `
+        }
+        document.getElementById(index).innerHTML=output;
+    }
+    function confirmedit(index){
+        var editno=document.getElementById('editno').value;
+        var editkegiatan=document.getElementById('editkegiatan').value;
+        var edithari=document.getElementById('edithari').value;
+        var editgambar=document.getElementById('editgambar').value;
+        if(editno==null){
+            menu[index].no=menu[index].no
+        }else{
+            menu[index].no=editno;
+        }
+        if(editkegiatan==null){
+            menu[index].kegiatan=menu[index].kegiatan
+        }else{
+            menu[index].kegiatan=editkegiatan;
+        }
+        if(edithari==null){
+            menu[index].hari=menu[index].hari
+        }else{
+            menu[index].hari=edithari;
+        }
+        if(editgambar==null){
+            menu[index].gambar=menu[index].gambar
+        }else{
+            menu[index].gambar=editgambar;
+        }
+        menu[index].no=editno
+        menu[index].kegiatan=editkegiatan
+        menu[index].hari=edithari
+        menu[index].gambar=editgambar
+        printMenu()
+    }
+printMenu()
+
+
+
+
+    </script>
